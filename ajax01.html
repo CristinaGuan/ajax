@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ajax01---用JS实现二级联动效果</title>
+</head>
+
+<body>
+	<form >
+		<select id="province">
+			<option>请选择</option>
+		</select>
+		<select  id="city">
+			<option>请选择</option>
+		</select>
+	</form>
+	<script>
+		var  se_province=document.getElementById("province");
+		 var  Pro_city=document.getElementById("city");
+	   //加载页面后显示省份列表内容
+		window.onload=function(){
+			var option=province.getElementsByTagName("option");
+			var arrayProvice=["北京市","广东省","四川省","湖南省","云南省"];
+			for(var i=0 ;i<arrayProvice.length;i++)
+			{   //新建option标签
+				var option=document.createElement("option");
+				//把数组内容放入option里面
+				var textNode=document.createTextNode(arrayProvice[i]);
+				option.appendChild(textNode);
+				//给select标签添加option
+			    se_province.appendChild(option);
+			}
+		}
+		
+		//给select标签绑定onchange事件，在切换省份时显示对应的城市列表
+		   se_province.onchange=function(){
+			   //先为city元素的option文本内容情况，防止在多次触发onchange事件时出现城市列表重复添加
+			   var opts=Pro_city.getElementsByTagName("option");
+			   for(var j=opts.length-1;j>0;j--)
+			   {
+				   Pro_city.removeChild(opts[j]);
+			   }
+			//获取当前已选择的省份名称
+			var selProvice=se_province.value;
+			//alert(selProvice);
+			//创建对应的城市列表-数组
+			var cities=[];
+			switch(selProvice){
+					case "北京市":cities=["朝阳区","海淀区","通州区","怀柔区"];
+					break;
+					case "广东省":cities=["深圳市","东莞市","广州市","佛山市"];
+					break;
+					case "湖南省":cities=["长沙市","湘潭市","邵阳市","岳阳市"];
+					break;
+					case "四川省":cities=["成都市","南充市","绵阳市","广元市"];
+					break;
+					case "云南省":cities=["昆明市","曲靖市","玉溪市","楚雄市"];   
+					break;
+			}
+			//遍历城市列表
+			for(var i=0;i<cities.length;i++){
+				 //4新建option标签
+				var option=document.createElement("option");
+				//把数组内容放入option里面
+				var textNode=document.createTextNode(cities[i]);
+				option.appendChild(textNode);
+				//给select标签添加option
+			    Pro_city.appendChild(option);
+			}
+			
+		}
+	
+	</script>
+</body>
+</html>

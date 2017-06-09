@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ajax02_二级联动</title>
+</head>
+
+<body>
+	<form>
+		<select id="province">
+			<option>请选择</option>
+		</select>
+		<select  id="city">
+			<option>请选择</option>
+		</select>
+	</form>
+	<script>
+	     var  se_province=document.getElementById("province");
+		 var  Pro_city=document.getElementById("city");
+	        //加载页面后显示省份列表内容
+	     window.onload=function(){
+			var option=province.getElementsByTagName("option");
+			var arrayProvice=["北京市","广东省","四川省","湖南省","云南省"];
+			for(var i=0 ;i<arrayProvice.length;i++)
+			{   //新建option标签
+				var option=document.createElement("option");
+				//把数组内容放入option里面
+				var textNode=document.createTextNode(arrayProvice[i]);
+				option.appendChild(textNode);
+				//给select标签添加option
+			    se_province.appendChild(option);
+			}
+		}
+	
+	    se_province.onchange=function(){
+			 //先为city元素的option文本内容情况，防止在多次触发onchange事件时出现城市列表重复添加
+			   var opts=Pro_city.getElementsByTagName("option");
+			   //console.log(opts);
+			   for(var j=opts.length-1;j>0;j--)
+			   {
+				   Pro_city.removeChild(opts[j]);
+			   }
+			//alert(se_province.value);
+			
+			//判断：如果省份value值是请选择就不会向服务器发送请求，避免生成多余的option标签
+			if(se_province.value !="请选择"){
+			//执行ajax异步请求
+			var xhr=getXhr();
+			xhr.open("post","ajax02.php",true);
+			xhr.setRequestHeader("content-type","application/x-www-form-urlencoded");
+			xhr.send("provcince="+se_province.value);
+			xhr.onreadystatechange=function(){
+				if(xhr.readyState==4&&xhr.status==200)
+					//接收服务器端的数据内容
+				   var data=xhr.responseText;//这里data是字符串
+				   var citydata=data.split(",");//截断字符串变成数组
+					//console.log(data);
+				  
+				   for(var i=0;i<citydata.length;i++){
+				   //新建option标签
+				   var option=document.createElement("option");
+				   //把数组内容放入option里面
+				   var textNode=document.createTextNode(citydata[i]);
+				   option.appendChild(textNode);
+				  //给select标签添加option
+			       Pro_city.appendChild(option);
+				   
+				   }
+			}
+		  }
+			
+		}
+		 
+		//创建XMLHTTPRequest对象， XMLHttpRequest 用于在后台与服务器交换数据
+      function getXhr(){
+		  var xmlhttp;
+		  if(window.XMLHttpRequest){
+			  xmlhttp=new XMLHttpRequest();
+		  }else{
+			  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+		  return xmlhttp;
+	  }
+		 
+		 	 
+	</script>
+</body>
+</html>
